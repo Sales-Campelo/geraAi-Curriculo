@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+*.sqlite3
+backend/.env
+
+# Node
+node_modules/
+frontend/dist/
+
+# Docker
+*.log
+
+# OS
+.DS_Store
