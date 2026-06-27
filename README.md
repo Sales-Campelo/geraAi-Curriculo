@@ -1,7 +1,7 @@
 # GeraAI Currículo
 
 Plataforma SaaS de análise de vagas, entrevista inteligente, geração de currículo
-otimizado para ATS e plano de desenvolvimento profissional, usando a API Gemini.
+otimizado para ATS e plano de desenvolvimento profissional.
 
 ## Stack
 
