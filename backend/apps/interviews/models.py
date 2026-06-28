@@ -14,6 +14,7 @@ class InterviewSession(models.Model):
     history = models.JSONField(default=list, blank=True)  # [{"role": "user"|"model", "parts": ["..."]}]
     candidate_profile = models.JSONField(default=dict, blank=True)
     finished = models.BooleanField(default=False)
+    question_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

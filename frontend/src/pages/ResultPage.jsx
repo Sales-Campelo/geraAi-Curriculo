@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import AdSlot from "../components/AdSlot";
 import CompatibilityGauge from "../components/CompatibilityGauge";
 import ProgressBar from "../components/ProgressBar";
+import SectionNav from "../components/SectionNav";
 import FeedbackModal from "../components/FeedbackModal";
 import { generateResume } from "../api/endpoints";
 import { useSession } from "../context/SessionContext";
@@ -96,14 +97,7 @@ export default function ResultPage() {
 
       <AdSlot label="Bloco de anúncio abaixo do currículo" style={{ height: 100, marginBottom: 20 }} />
 
-      <div style={{ display: "flex", justifyContent: "flex-end", gap: 12 }}>
-        <button className="btn-secondary" onClick={() => navigate("/curriculo")}>
-          Ver currículo completo
-        </button>
-        <button className="btn-primary" onClick={() => navigate("/plano-carreira")}>
-          Ver plano de desenvolvimento →
-        </button>
-      </div>
+      <SectionNav currentStep={2} />
 
       <FeedbackModal open={showFeedback} onClose={() => setShowFeedback(false)} />
     </div>

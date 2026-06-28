@@ -13,8 +13,6 @@ from .serializers import (
     InterviewStartRequestSerializer,
 )
 
-CONCLUSION_KEYWORD = "[ENTREVISTA_CONCLUIDA]"
-
 
 class InterviewStartView(APIView):
     """POST /api/interviews/start/"""
@@ -39,6 +37,7 @@ class InterviewStartView(APIView):
             job_analysis=job_analysis,
             session_id=data["session_id"],
             history=[{"role": "model", "parts": [first_question]}],
+            question_count=1,
         )
 
         return Response(
@@ -57,16 +56,18 @@ class InterviewMessageView(APIView):
         session = get_object_or_404(InterviewSession, id=data["interview_id"])
 
         interview_service = InterviewService()
-        reply = interview_service.next_message(session.history, data["message"])
 
         session.history.append({"role": "user", "parts": [data["message"]]})
-        session.history.append({"role": "model", "parts": [reply]})
 
-        if CONCLUSION_KEYWORD in reply:
+        if session.question_count >= 5:
             session.finished = True
             session.candidate_profile = interview_service.build_candidate_profile(
                 session.history
             )
+        else:
+            reply = interview_service.next_message(session.history, data["message"])
+            session.history.append({"role": "model", "parts": [reply]})
+            session.question_count += 1
 
         session.save()
 

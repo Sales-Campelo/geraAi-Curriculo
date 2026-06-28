@@ -6,7 +6,7 @@ from reportlab.lib.units import mm
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.platypus.flowables import HRFlowable
 
-from services.gemini_service import GeminiService
+from services.groq_service import GroqService
 
 SYSTEM_INSTRUCTION = """
 Você é um redator especialista em currículos otimizados para ATS (Applicant Tracking System).
@@ -16,7 +16,7 @@ Gere conteúdo claro, objetivo, com verbos de ação e palavras-chave da vaga.
 
 class ResumeService:
     def __init__(self):
-        self.gemini = GeminiService()
+        self.groq = GroqService()
 
     def generate_resume_content(self, candidate_profile: dict, job_requirements: dict) -> dict:
         prompt = f"""
@@ -35,7 +35,7 @@ class ResumeService:
         Perfil do candidato: {candidate_profile}
         Requisitos da vaga: {job_requirements}
         """
-        return self.gemini.generate_json(prompt, system_instruction=SYSTEM_INSTRUCTION)
+        return self.groq.generate_json(prompt, system_instruction=SYSTEM_INSTRUCTION)
 
     def render_pdf(self, resume_content: dict) -> bytes:
         buf = io.BytesIO()

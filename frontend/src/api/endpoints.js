@@ -20,3 +20,9 @@ export const generateCareerPlan = (resumeId) =>
 export const sendFeedback = (payload) => api.post("/feedback/", payload);
 
 export const getStatistics = () => api.get("/statistics/");
+
+export const listResumes = (sessionId) =>
+  api.get("/resumes/", { params: { session_id: sessionId } });
+
+export const updateResumeStatus = (resumeId, status) =>
+  api.patch(`/resumes/${resumeId}/status/`, { status });

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import ProgressBar from "../components/ProgressBar";
+import SectionNav from "../components/SectionNav";
 import { generateCareerPlan } from "../api/endpoints";
 import { useSession } from "../context/SessionContext";
 
@@ -59,15 +60,28 @@ export default function CareerPlanPage() {
       <ProgressBar currentStep={4} />
 
       <div className="card">
-        <h2 style={{ marginTop: 0, color: "var(--color-primary-dark)" }}>
-          Seu plano de desenvolvimento
-        </h2>
-        <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+          <h2 style={{ margin: 0, color: "var(--color-primary-dark)" }}>
+            Seu plano de desenvolvimento
+          </h2>
+          <a
+            className="btn-secondary"
+            href={`${import.meta.env.VITE_API_URL}/career-plan/${plan.id}/?format=pdf`}
+            target="_blank"
+            rel="noreferrer"
+            style={{ fontSize: 13, padding: "9px 18px" }}
+          >
+            Baixar PDF
+          </a>
+        </div>
+        <div style={{ display: "flex", gap: 20, flexWrap: "wrap", marginTop: 20 }}>
           <PlanColumn title="Curto Prazo (30 dias)" items={plan.curto_prazo} color="var(--color-primary)" />
           <PlanColumn title="Médio Prazo (90 dias)" items={plan.medio_prazo} color="var(--color-success)" />
           <PlanColumn title="Longo Prazo (180 dias)" items={plan.longo_prazo} color="var(--color-primary-dark)" />
         </div>
       </div>
+
+      <SectionNav currentStep={4} />
     </div>
   );
 }
