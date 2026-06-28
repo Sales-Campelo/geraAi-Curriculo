@@ -8,7 +8,7 @@ otimizado para ATS e plano de desenvolvimento profissional.
 - **Frontend:** React + Vite, React Router, Axios, React Hook Form, Framer Motion, React Icons
 - **Backend:** Django + Django REST Framework
 - **Banco:** PostgreSQL
-- **IA:** Google Gemini API
+- **IA:** API
 - **Infra:** Docker + Docker Compose
 
 ## Estrutura
