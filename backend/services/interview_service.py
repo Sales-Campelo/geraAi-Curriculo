@@ -1,32 +1,26 @@
-from services.gemini_service import GeminiService
+from services.groq_service import GroqService
 
 SYSTEM_INSTRUCTION = """
 Você é um entrevistador de RH conduzindo uma entrevista inicial amigável e profissional.
-Faça uma pergunta de cada vez, adaptando-se às respostas anteriores do candidato,
-para entender formação, experiência, tecnologias, idiomas e projetos.
-Quando sentir que já reuniu informações suficientes para montar um currículo,
-responda apenas com a palavra-chave [ENTREVISTA_CONCLUIDA].
+Você deve fazer exatamente 5 perguntas, uma de cada vez, adaptando-se às respostas 
+anteriores do candidato, para entender formação, experiência, tecnologias, idiomas e projetos.
+Após receber a 5ª resposta do candidato, agradeça e informe que a entrevista foi concluída.
 """
 
 
 class InterviewService:
     def __init__(self):
-        self.gemini = GeminiService()
+        self.groq = GroqService()
 
     def start(self, job_requirements: dict) -> str:
         prompt = f"""
         Inicie a entrevista para uma vaga com os seguintes requisitos: {job_requirements}.
         Faça a primeira pergunta agora.
         """
-        return self.gemini.generate_text(prompt, system_instruction=SYSTEM_INSTRUCTION)
+        return self.groq.generate_text(prompt, system_instruction=SYSTEM_INSTRUCTION)
 
     def next_message(self, history: list[dict], user_message: str) -> str:
-        """
-        history: lista de dicts no formato [{"role": "user"|"model", "parts": ["texto"]}]
-        """
-        chat = self.gemini.start_chat(history=history, system_instruction=SYSTEM_INSTRUCTION)
-        response = chat.send_message(user_message)
-        return response.text
+        return self.groq.send_message(history, user_message, system_instruction=SYSTEM_INSTRUCTION)
 
     def build_candidate_profile(self, history: list[dict]) -> dict:
         """Sumariza o histórico da entrevista em um perfil estruturado."""
@@ -44,4 +38,4 @@ class InterviewService:
 
         Histórico: {history}
         """
-        return self.gemini.generate_json(prompt, system_instruction=SYSTEM_INSTRUCTION)
+        return self.groq.generate_json(prompt, system_instruction=SYSTEM_INSTRUCTION)

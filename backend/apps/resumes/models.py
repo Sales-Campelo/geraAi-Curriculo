@@ -23,6 +23,16 @@ class Resume(models.Model):
     competencias_atendidas = models.JSONField(default=list, blank=True)
     competencias_ausentes = models.JSONField(default=list, blank=True)
 
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ("enviado", "Enviado"),
+            ("teste", "Teste Técnico"),
+            ("entrevista", "Entrevista"),
+            ("conclusao", "Conclusão"),
+        ],
+        default="enviado",
+    )
     share_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
 

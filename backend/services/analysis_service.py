@@ -1,4 +1,4 @@
-from services.gemini_service import GeminiService
+from services.groq_service import GroqService
 
 SYSTEM_INSTRUCTION = """
 Você é um especialista em recrutamento e análise de vagas de emprego.
@@ -23,11 +23,11 @@ class AnalysisService:
     """Extração de requisitos da vaga e cálculo de compatibilidade."""
 
     def __init__(self):
-        self.gemini = GeminiService()
+        self.groq = GroqService()
 
     def extract_job_requirements(self, job_description: str) -> dict:
         prompt = f"{JSON_SCHEMA_HINT}\n\nDescrição da vaga:\n{job_description}"
-        return self.gemini.generate_json(prompt, system_instruction=SYSTEM_INSTRUCTION)
+        return self.groq.generate_json(prompt, system_instruction=SYSTEM_INSTRUCTION)
 
     def compute_compatibility(self, job_requirements: dict, candidate_profile: dict) -> dict:
         prompt = f"""
@@ -46,4 +46,4 @@ class AnalysisService:
         Perfil do candidato:
         {candidate_profile}
         """
-        return self.gemini.generate_json(prompt, system_instruction=SYSTEM_INSTRUCTION)
+        return self.groq.generate_json(prompt, system_instruction=SYSTEM_INSTRUCTION)

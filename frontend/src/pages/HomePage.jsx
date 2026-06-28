@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 
 import AdSlot from "../components/AdSlot";
 import ProgressBar from "../components/ProgressBar";
+import SectionNav from "../components/SectionNav";
 import { analyzeJob } from "../api/endpoints";
 import { useSession } from "../context/SessionContext";
 
@@ -108,6 +109,8 @@ export default function HomePage() {
           </div>
         </form>
       </motion.div>
+
+      <SectionNav currentStep={0} />
     </div>
   );
 }

@@ -9,7 +9,12 @@ from services.analysis_service import AnalysisService
 from services.resume_service import ResumeService
 
 from .models import Resume
-from .serializers import ResumeGenerateRequestSerializer, ResumeSerializer
+from .serializers import (
+    ResumeGenerateRequestSerializer,
+    ResumeListSerializer,
+    ResumeSerializer,
+    ResumeStatusUpdateSerializer,
+)
 
 
 class ResumeGenerateView(APIView):
@@ -79,4 +84,27 @@ class ResumeDetailView(APIView):
                 content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             )
 
+        return Response(ResumeSerializer(resume).data)
+
+
+class ResumeListView(APIView):
+    """GET /api/resumes/?session_id=xxx"""
+
+    def get(self, request):
+        session_id = request.query_params.get("session_id")
+        if not session_id:
+            return Response({"error": "session_id is required"}, status=400)
+        resumes = Resume.objects.filter(job_analysis__session_id=session_id)
+        return Response(ResumeListSerializer(resumes, many=True).data)
+
+
+class ResumeStatusUpdateView(APIView):
+    """PATCH /api/resumes/{id}/status/"""
+
+    def patch(self, request, resume_id):
+        resume = get_object_or_404(Resume, id=resume_id)
+        serializer = ResumeStatusUpdateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        resume.status = serializer.validated_data["status"]
+        resume.save(update_fields=["status"])
         return Response(ResumeSerializer(resume).data)

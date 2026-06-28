@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import ProgressBar from "../components/ProgressBar";
+import SectionNav from "../components/SectionNav";
 import { startInterview, sendInterviewMessage } from "../api/endpoints";
 import { useSession } from "../context/SessionContext";
 
@@ -15,6 +16,8 @@ export default function InterviewPage() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [interviewIdLocal, setInterviewIdLocal] = useState(null);
+  const [questionCount, setQuestionCount] = useState(0);
+  const totalQuestions = 5;
   const bottomRef = useRef(null);
 
   useEffect(() => {
@@ -26,6 +29,7 @@ export default function InterviewPage() {
       const { data } = await startInterview(jobAnalysisId, sessionId);
       setInterviewId(data.id);
       setInterviewIdLocal(data.id);
+      setQuestionCount(data.question_count);
       setMessages(
         data.history.map((h) => ({ role: h.role, text: h.parts[0] }))
       );
@@ -46,13 +50,14 @@ export default function InterviewPage() {
     setSending(true);
 
     const { data } = await sendInterviewMessage(interviewIdLocal, userMessage);
-    const lastModelMessage = data.history[data.history.length - 1].parts[0];
+    setQuestionCount(data.question_count);
 
     if (data.finished) {
       navigate("/resultado");
       return;
     }
 
+    const lastModelMessage = data.history[data.history.length - 1].parts[0];
     setMessages((prev) => [...prev, { role: "model", text: lastModelMessage }]);
     setSending(false);
   };
@@ -62,9 +67,16 @@ export default function InterviewPage() {
       <ProgressBar currentStep={1} />
 
       <div className="card" style={{ display: "flex", flexDirection: "column", height: 520 }}>
-        <h2 style={{ marginTop: 0, color: "var(--color-primary-dark)" }}>
-          Entrevista com a IA
-        </h2>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+          <h2 style={{ marginTop: 0, color: "var(--color-primary-dark)" }}>
+            Entrevista com a IA
+          </h2>
+          {questionCount > 0 && (
+            <span style={{ fontSize: 12, color: "var(--color-muted)", fontFamily: "var(--font-mono)" }}>
+              {questionCount}/{totalQuestions}
+            </span>
+          )}
+        </div>
 
         <div style={{ flex: 1, overflowY: "auto", padding: "8px 4px" }}>
           {loading && <p>Carregando primeira pergunta...</p>}
@@ -117,6 +129,8 @@ export default function InterviewPage() {
           </button>
         </div>
       </div>
+
+      <SectionNav currentStep={1} />
     </div>
   );
 }
